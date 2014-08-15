@@ -5,7 +5,7 @@ import jieba
 import jieba.posseg as pseg
 
 #connect db
-cx = sqlite3.connect("g:/pysrc/qq_msg_analysis/user.db")
+cx = sqlite3.connect("./user.db")
 cu = cx.cursor()
 
 #init jieba
@@ -47,7 +47,7 @@ def tokens(str):
     return result
 
 #analysis all by session id
-sql = 'select distinct session from msgs where session="我的QQ群 - 饮食群"'
+sql = 'select distinct session from msgs'
 ress = cu.execute(sql).fetchall()
 count = 0
 

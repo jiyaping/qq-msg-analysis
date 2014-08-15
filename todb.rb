@@ -159,5 +159,6 @@ class MsgParse
 	end
 end
 
+#file need parse...
 msg = MsgParse.new("msg-test.txt")
 msg.parse

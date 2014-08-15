@@ -4,7 +4,7 @@ import sqlite3
 import datetime
 
 #connect db
-cx = sqlite3.connect("g:/pysrc/qq_msg_analysis/user.db")
+cx = sqlite3.connect("./user.db")
 cu = cx.cursor()
 
 #output file
@@ -93,7 +93,7 @@ def getChartData(session, nick):
     return "{label:'%s',data:[%s]}" % (nick, _str)
 
 def foreach_data():
-    sql = "select distinct session from msgs"# where session = '我的QQ群 - 饮食群'"
+    sql = "select distinct session from msgs"
     ress = cu.execute(sql).fetchall()
     count = 0
 
