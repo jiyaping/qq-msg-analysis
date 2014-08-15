@@ -1,0 +1,134 @@
+body {
+	font-family: Tahoma, Verdana, Helvetica, Sans-serif;
+}
+
+a {
+	text-decoration: none;
+	margin: 0px 3px;
+}
+
+.tagcloud {
+	font-size: 34px;
+	text-align: center;
+	padding: 15px;
+	margin: 0px 0px 30px 0px;
+	border: 1px solid #eeeeee;
+	background-color: #f2f2f2;
+}
+
+a.t11 {
+	color: #dd4400;
+    font-size: 250%;
+    font-weight: bold;
+}
+
+a.t11:hover {
+	background-color: #dd4400;
+	color: #FFFFFF;
+}
+
+a.t10 {
+	color: #FF3300;
+    font-size: 200%;
+    font-weight: bold;
+}
+
+a.t10:hover {
+	background-color: #FF3300;
+	color: #FFFFFF;
+}
+
+a.t9 {
+	color: #FF3300;
+	font-size: 150%;
+}
+
+a.t9:hover {
+	background-color: #FF3300;
+	color: #FFFFFF;
+}
+
+a.t8 {
+	color: #FF9933;
+    font-size: 120%;
+    font-weight: bold;
+}
+
+a.t8:hover {
+	background-color: #FF9933;
+	color: #FFFFFF;
+}
+
+a.t7 {
+	color: #FF9933;
+	font-size: 100%;
+}
+
+a.t7:hover {
+	background-color: #FF9933;
+	color: #FFFFFF;
+}
+
+a.t6 {
+	color: #99CC33;
+    font-size: 95%;
+    font-weight: bold;
+}
+
+a.t6:hover {
+	background-color: #99CC33;
+	color: #FFFFFF;
+}
+
+a.t5 {
+	color: #339933;
+	font-size: 90%;
+}
+
+a.t5:hover {
+	background-color: #339933;
+	color: #FFFFFF;
+}
+
+a.t4 {
+	color: #339933;
+	font-size: 80%;
+    font-weight: bold;
+}
+
+a.t4:hover {
+	background-color: #339933;
+	color: #FFFFFF;
+}
+
+a.t3 {
+	color: #339999;
+	font-size: 75%;
+}
+
+a.t3:hover {
+	background-color: #339999;
+	color: #FFFFFF;
+}
+
+a.t2 {
+	color: #3399FF;
+	font-size: 65%;
+    font-weight: bold;
+}
+
+a.t2:hover
+{
+	background-color: #3399FF;
+	color: #FFFFFF;
+}
+
+a.t1 {
+	color: #888888;
+	font-size: 60%;
+}
+
+a.t1:hover {
+	background-color: #888888;
+	color: #FFFFFF;
+}
