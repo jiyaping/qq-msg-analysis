@@ -17,4 +17,5 @@
 
 ##### ½ØÍ¼Ê¾Àý
 
-![pic]()
+![pic1](https://raw.githubusercontent.com/jiyaping/qq-msg-analysis/master/pic1.png)
+![pic2](https://raw.githubusercontent.com/jiyaping/qq-msg-analysis/master/pic2.png)
