@@ -89,6 +89,7 @@
 
 			// insert checkboxes 
 			var choiceContainer = $("#choices");
+			choiceContainer.html('');
 			$.each(datasets, function(key, val) {
 				choiceContainer.append("<span><input type='checkbox' name='" + key +
 					"' checked='checked' id='id" + key + "'></input>" +

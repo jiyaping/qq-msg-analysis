@@ -22,33 +22,33 @@ def microsecond2str(ptime):
 # habits = {session1:[{nick1:{token1:20,token3:40}},{nick1:{token1:20,token3:40}}],session1:[{nick1:{token1:20,token2:30,token3:40}}]}
 def getHabit(session, nick):
     sql = '''
-select * from (select tokens.token,
-       count,
-       tokens.flag,
-       (case
-         when tokens.flag like 'n%' then
-          tokens.count * 2.0
-         when tokens.flag like 'a%' then
-          tokens.count * 0.9
-         when tokens.flag like 'v%' then
-          tokens.count * 1
-         when tokens.flag like 'eng%' then
-          tokens.count * 0.8
-         when tokens.flag like 'r%' then
-          tokens.count * 0
-         when tokens.flag like 'x%' then
-          0
-         else
-          tokens.count * 0.1
-       end) newcount,random() rand
-  from tokens
- where length(token) > 1
-   and newcount > 3 and count > 3 
-   and (token != '图片' and token != '表情')
-   and tokens.sessionid = ?
-   and tokens.userid = ?
- order by newcount desc limit ?
-) temp order by rand desc
+        select * from (select tokens.token,
+               count,
+               tokens.flag,
+               (case
+                 when tokens.flag like 'n%' then
+                  tokens.count * 2.0
+                 when tokens.flag like 'a%' then
+                  tokens.count * 0.9
+                 when tokens.flag like 'v%' then
+                  tokens.count * 1
+                 when tokens.flag like 'eng%' then
+                  tokens.count * 0.8
+                 when tokens.flag like 'r%' then
+                  tokens.count * 0
+                 when tokens.flag like 'x%' then
+                  0
+                 else
+                  tokens.count * 0.1
+               end) newcount,random() rand
+          from tokens
+         where length(token) > 1
+           and newcount > 3 and count > 3 
+           and (token != '图片' and token != '表情')
+           and tokens.sessionid = ?
+           and tokens.userid = ?
+         order by newcount desc limit ?
+        ) temp order by rand desc
     ''' 
     #print sql
     _str = ""
@@ -67,25 +67,27 @@ select * from (select tokens.token,
 def getChartData(session, nick):
     # data gather timespan
     sql = '''
-    select strftime('%Y-%m-%d', dr) ndr,
-       (select count(*)
-          from msgs
-         where session = ?
-           and (nick = ? or userid = ?)
-           and  date(time) = dr) ncount
-  from (select date(strftime('%Y-%m-%d',
-(select min(time)
+     select strftime('%Y-%m-%d', dr) ndr, count(*) ncount
+      from (select date(strftime('%Y-%m-%d',
+                                 (select min(time)
+                                    from msgs
+                                   where session = ?)),
+                        '+' || id || ' day') as dr
+              from nlists
+             where id < (select julianday(date(max(time))) -
+                                julianday(date(min(time)))
+                           from msgs
+                          where session = ?)) dateranges
+      left join (select *
                    from msgs
-                  where session = ?)
-), '+' || id || ' day') as dr
-           from nlists
-          where id <(select julianday(date(max(time)))-julianday(date(min(time)))
-                   from msgs
-                  where session = ?)) dateranges;
+                  where session = ?
+                    and (nick = ? or userid = ?)) tmp_msg
+        on date(time) = dr
+     group by ndr
     '''
 
     #print sql
-    ress = cu.execute(sql,(session, nick, nick, session, session)).fetchall()
+    ress = cu.execute(sql,(session, session, session, nick, nick)).fetchall()
     _str = ""
     for i in range(len(ress)):
         _str += "[%s,%s]" % (str2microsecond(ress[i][0]), int(ress[i][1])) + ","
@@ -103,7 +105,7 @@ def foreach_data():
         session = ress[i][0]
         habit_item_str = ""
         chart_item_str = ""
-        #1. nomal msg
+        #1. normal msg
         if not session.startswith(u"我的QQ群"):
             sql = "select distinct nick from msgs where session = '%s'" % session
             sub_ress = cu.execute(sql).fetchall()
@@ -114,8 +116,9 @@ def foreach_data():
 
         #2. qun msg
         else:
-            sql = "select distinct userid from msgs where session = '%s'" % session
-            sub_ress = cu.execute(sql).fetchall()
+            max_report_num = 50 # 群人数太多，默认最多产生前50个发言
+            sql = "select userid,count(*) from msgs where session = ? group by userid order by count(*) desc limit ?"
+            sub_ress = cu.execute(sql, (session, max_report_num)).fetchall()
 
             for sub_i in range(len(sub_ress)):
                 habit_item_str = habit_item_str + getHabit(session, sub_ress[sub_i][0]) + ","
@@ -124,15 +127,14 @@ def foreach_data():
         habit_str = habit_str + "'" + session + "':{" + habit_item_str + "},"
         chart_str = chart_str + "'" + session + "':[" + chart_item_str + "],"
         count += 1
-        print count
+        print(count)
         
     return "habits = {" + habit_str +"}" + ";" + "chartdata = {%s}" % chart_str
 
 def save2disk():
-    file_object = open('result/static/data.js', 'w')
+    file_object = open('result/static/data.js', 'wb')
     file_object.write(foreach_data().encode('utf-8','ignore'))
     file_object.close( )
 
 #run and save data to disk
 save2disk()
-#print foreach_data().encode('utf-8','ignore')

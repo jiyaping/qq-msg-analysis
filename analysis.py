@@ -13,9 +13,9 @@ cu = cx.cursor()
 
 #parase single user
 def analysis(session, userid):
-    sql = "select * from msgs where (nick='%s' or userid='%s') and session='%s'" % (userid, userid, session)
+    sql = "select * from msgs where (nick=? or userid=?) and session=?"
 
-    result = cu.execute(sql)
+    result = cu.execute(sql, (userid, userid, session))
     msgs = result.fetchall()
 
     str = ""
@@ -29,7 +29,6 @@ def analysis(session, userid):
 
     cu.executemany("insert into tokens(sessionid, userid, token, count, flag) \
         values (?, ?, ?, ?, ?) ;", dslist)
-    cx.commit()
 
 def tokens(str):
     '''
@@ -39,7 +38,7 @@ def tokens(str):
 
     result = {}
     for w in words:
-        if result.has_key(w.word):
+        if w.word in result:
             result[w.word][0] += 1
         else:
             result[w.word] = [1, w.flag]
@@ -50,6 +49,8 @@ def tokens(str):
 sql = 'select distinct session from msgs'
 ress = cu.execute(sql).fetchall()
 count = 0
+
+print("session count: ", len(ress))
 
 for i in range(len(ress)):
     session = ress[i][0]
@@ -69,5 +70,6 @@ for i in range(len(ress)):
         for sub_i in range(len(sub_ress)):
             analysis(session, sub_ress[sub_i][0])
 
+    cx.commit()
     count += 1
-    print count
+    print('process session ', count, 'finished.')
